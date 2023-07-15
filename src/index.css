@@ -1,13 +1,18 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* JokeList.css */
+.joke-card {
+  display: none; /* Hide all joke cards by default */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.visible {
+  display: block; /* Display the joke card if it has the 'visible' class */
+  animation: fadeInOut 2s ease-in-out; /* Use fadeInOut animation */
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0; /* Fully transparent at the beginning and end */
+  }
+  50% {
+    opacity: 1; /* Fully visible at the middle */
+  }
 }
