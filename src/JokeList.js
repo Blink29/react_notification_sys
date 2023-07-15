@@ -1,31 +1,36 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
 import JokeCard from './JokeCard'
+import { useState, useEffect } from 'react';
 
-const JokeList = ({ visibleJokes }) => { 
-  const [currentIndex, setCurrentIndex] = useState(0);
+const JokeList = ({ jokes, isLoading, fetchError }) => { 
+  const [showJokes, setShowJokes] = useState([]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % 5);
-    }, 5000);
+    // Update showJokes with the latest 5 jokes from the jokes array
+    setShowJokes((prevShowJokes) => {
+      const startIndex = jokes.length >= 5 ? jokes.length - 5 : 0;
+      return jokes.slice(startIndex);
+    });
+  }, [jokes]);
 
-    return () => clearInterval(interval);
-  }, []);
+  console.log(showJokes)
 
   return (
     <div className="joke-container">
-      <>
-      {visibleJokes.map((joke, index) => (
-        <div
-          key={joke.id}
-          className={`joke-card ${index === currentIndex ? 'visible' : ''}`}
-        >
-          <JokeCard joke={joke} />
-        </div>
-      ))}
+      {showJokes.length > 0 ? (
+        showJokes.map((joke) => (
+          <div key={joke.id} className="joke-card">
+            <JokeCard joke={joke} />
+            <p>ID: {joke.id}</p>
+            <p>Setup: {joke.setup}</p>
+            <p>Punchline: {joke.punchline}</p>
+          </div>
+        ))
+      ) : (
+        <p>No jokes available</p>
+      )}
+      {fetchError && <p>Error: {fetchError}</p>}
       <div>hello</div>
-      </>
     </div>
   )
 }

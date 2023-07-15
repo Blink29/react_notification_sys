@@ -5,53 +5,44 @@ import JokeList from "./JokeList";
 import SingleJoke from "./SingleJoke";
 
 function App() {
-  const URL = "httpss://official-joke-api.appspot.com/random_joke"
+  const URL = "https://official-joke-api.appspot.com/random_joke"
 
   const [jokes, setJokes] = useState([])
-  const [visibleJokes, setVisibleJokes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [fetchError, setFetchError] = useState(null)
 
   useEffect(() => {
     const fetchJoke = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await axios.get(URL)
-        const jokeData = [response.data]
-        setJokes(jokeData)
-      } catch(err) {
-          console.log(err)
-          setFetchError(err.message)
+        const response = await axios.get(URL);
+        const jokeData = response.data;
+        setJokes((prevJokes) => [...prevJokes, jokeData]);
+      } catch (err) {
+        console.log(err);
+        setFetchError(err.message);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    fetchJoke() 
-  }, [jokes, setJokes])
+    };
+    fetchJoke();
 
-  // useEffect(() => {
+    const intervalId = setInterval(fetchJoke, 5000);
 
-  // }, [jokes]);
+    return () => clearInterval(intervalId);
+  }, []);
+
   useEffect(() => {
-      setVisibleJokes((prevJokes) => {
-        const startIndex = prevJokes.length >= 5 ? prevJokes.length - 5 : 0;
-        return jokes.slice(startIndex, startIndex + 5);
-      });
+    console.log(jokes);
   }, [jokes]);
 
-  useEffect(() => {
-    console.log(visibleJokes);
-  }, [visibleJokes]);
-
-  useEffect(() => {
-    
-  }, [jokes])
-
+  
   return (
     <Routes>
       <Route path="/" element={<JokeList 
-        visibleJokes={visibleJokes}
+        jokes = {jokes}
         isLoading={isLoading}
+        fetchError={fetchError}
       />} />
       <Route path=":id" element={<SingleJoke />} />
     </Routes>
